@@ -46,7 +46,7 @@ public class SensorListener implements SensorEventListener {
         SensorManager.getOrientation(rotationMatrix, orientation);
       }
       for (OrientationFeedbackView view : orientationFeedbackViews) {
-        view.moveBall(Math.toDegrees(orientation[1]));
+        view.moveBall(Math.toDegrees(orientation[view.getAxis()]));
       }
     }
   }

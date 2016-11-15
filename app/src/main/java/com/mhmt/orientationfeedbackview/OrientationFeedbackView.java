@@ -14,19 +14,26 @@ import android.widget.FrameLayout;
 
 public class OrientationFeedbackView extends FrameLayout {
 
-  private static final int DEFAULT_LINE_WIDTH = 5;
+  protected static final int DEFAULT_LINE_WIDTH = 5;
 
-  private OrientationFeedbackBall ball;
+  protected OrientationFeedbackBall ball;
 
   public static final int AXIS_X = 0;
   public static final int AXIS_Y = 1;
   public static final int AXIS_Z = 2;
 
-  private int axis;
-  private int lineWidth;
+  public static final int VERTICAL = 0;
+  public static final int HORIZONTAL = 1;
 
-  private SensorManager mSensorManager;
-  private Sensor mAccelerometer;
+  protected int axis;
+  protected int lineWidth;
+
+  protected SensorManager mSensorManager;
+  protected Sensor mAccelerometer;
+  protected int ballColor;
+  protected int backgroundColor;
+  protected int lineColor;
+  private int orientation;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -53,10 +60,11 @@ public class OrientationFeedbackView extends FrameLayout {
   private void init(final AttributeSet attrs) {
     setupSensors();
     saveAttr(attrs);
-    setBackgroundColor(Color.BLACK);
+    setBackgroundColor(backgroundColor);
     drawBall();
     drawLine();
   }
+
 
   private void setupSensors() {
     mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
@@ -65,17 +73,20 @@ public class OrientationFeedbackView extends FrameLayout {
 
 
   private void drawBall() {
-    ball = new OrientationFeedbackBall(getContext());
-    ball.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                                          LayoutParams.WRAP_CONTENT,
-                                          Gravity.CENTER_VERTICAL));
+    ball = orientation == VERTICAL ? new VBall(getContext()) : new HBall(getContext());
+    ball.setColor(ballColor);
     addView(ball);
   }
 
   private void drawLine() {
     View line = new View(getContext());
-    line.setBackgroundColor(Color.WHITE);
-    line.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT, lineWidth, Gravity.CENTER_VERTICAL));
+    line.setBackgroundColor(lineColor);
+    line.setLayoutParams(orientation == VERTICAL ? new LayoutParams(LayoutParams.MATCH_PARENT,
+                                                                    lineWidth,
+                                                                    Gravity.CENTER_VERTICAL)
+                                                 : new LayoutParams(lineWidth,
+                                                                    LayoutParams.MATCH_PARENT,
+                                                                    Gravity.CENTER_HORIZONTAL));
     addView(line);
   }
 
@@ -85,17 +96,24 @@ public class OrientationFeedbackView extends FrameLayout {
         R.styleable.OrientationFeedbackView,
         0, 0);
     try {
-      axis = a.getInteger(R.styleable.OrientationFeedbackView_axis, AXIS_Y);
-      lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_line_width, DEFAULT_LINE_WIDTH);
+      axis = a.getInteger(R.styleable.OrientationFeedbackView_gauge_axis, AXIS_Y);
+      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
+      lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
+      ballColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color, 0x388E3C);
+      backgroundColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, Color.TRANSPARENT);
+      lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
     } finally {
       a.recycle();
     }
   }
 
-  public void moveBall(double value) {
-    if (ball.getAnimation() == null) {
-      ball.setTranslationY((float) value);
-    }
+  public void setBallColor(final int color) {
+    ballColor = color;
+    ball.setColor(color);
+  }
+
+  public void moveBall(final double value) {
+    ball.move(value);
   }
 
   public int getAxis() {

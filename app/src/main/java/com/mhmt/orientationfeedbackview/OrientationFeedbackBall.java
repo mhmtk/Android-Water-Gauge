@@ -9,9 +9,9 @@ import android.os.Build;
 import android.util.AttributeSet;
 import android.view.View;
 
-public class OrientationFeedbackBall extends View {
+public abstract class OrientationFeedbackBall extends View {
 
-  private Paint drawPaint;
+  protected Paint drawPaint;
 
   protected OrientationFeedbackBall(final Context context) {
     super(context);
@@ -35,7 +35,7 @@ public class OrientationFeedbackBall extends View {
     init(attrs);
   }
 
-  private void init(final AttributeSet attrs) {
+  protected void init(final AttributeSet attrs) {
     drawPaint = new Paint();
     drawPaint.setColor(Color.GREEN);
     drawPaint.setStyle(Paint.Style.FILL);
@@ -43,7 +43,17 @@ public class OrientationFeedbackBall extends View {
   }
 
   @Override protected void onDraw(final Canvas canvas) {
-    canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, drawPaint);
+    onDraww(canvas);
     super.onDraw(canvas);
   }
+
+  protected abstract void onDraww(final Canvas canvas);
+
+  public void setColor(final int color) {
+    drawPaint.setColor(color);
+//    invalidate();
+  }
+
+  protected abstract void move(final double value);
+
 }

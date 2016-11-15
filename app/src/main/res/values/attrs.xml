@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
   <declare-styleable name="OrientationFeedbackView">
-    <attr name="axis" format="enum">
+    <attr name="gauge_axis" format="enum">
       <enum name="x" value="0"/>
       <enum name="y" value="1"/>
       <enum name="z" value="2"/>
     </attr>
-    <attr name="line_width" format="dimension"/>
+    <attr name="gauge_line_width" format="dimension"/>
+    <attr name="gauge_ball_accept_color" format="color"/>
+    <attr name="gauge_background_color" format="color"/>
+    <attr name="gauge_line_color" format="color"/>
+    <attr name="gauge_orientation" format="enum">
+      <enum name="vertical" value="0"/>
+      <enum name="horizontal" value="1"/>
+    </attr>
+    <!--<attr name="gauge_ball_reject_color" format="color"/>-->
   </declare-styleable>
 </resources>

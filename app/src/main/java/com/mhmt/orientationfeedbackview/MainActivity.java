@@ -19,8 +19,9 @@ public class MainActivity extends AppCompatActivity {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    OrientationFeedbackView orientationFeedbackView = ((OrientationFeedbackView) findViewById(R.id.orientation_view));
-    sensorListener = new SensorListener(orientationFeedbackView);
+    OrientationFeedbackView hOrientationFeedbackView = ((OrientationFeedbackView) findViewById(R.id.orientation_view_h));
+    OrientationFeedbackView vOrientationFeedbackView = ((OrientationFeedbackView) findViewById(R.id.orientation_view_v));
+    sensorListener = new SensorListener(hOrientationFeedbackView, vOrientationFeedbackView);
     sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
     sensorMagnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
