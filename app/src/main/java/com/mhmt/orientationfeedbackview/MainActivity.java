@@ -1,0 +1,39 @@
+package com.mhmt.orientationfeedbackview;
+
+import android.hardware.Sensor;
+import android.hardware.SensorManager;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+
+  private SensorManager sensorManager;
+  private Sensor sensorAccelerometer;
+  private Sensor sensorMagnetometer;
+
+  private SensorListener sensorListener;
+
+  @Override
+  protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_main);
+
+    OrientationFeedbackView orientationFeedbackView = ((OrientationFeedbackView) findViewById(R.id.orientation_view));
+    sensorListener = new SensorListener(orientationFeedbackView);
+    sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
+    sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+    sensorMagnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+  }
+
+  @Override protected void onResume() {
+    super.onResume();
+    sensorManager.registerListener(sensorListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_FASTEST);
+    sensorManager.registerListener(sensorListener, sensorMagnetometer, SensorManager.SENSOR_DELAY_FASTEST);
+  }
+
+  @Override protected void onPause() {
+    super.onPause();
+    sensorManager.unregisterListener(sensorListener);
+  }
+}
