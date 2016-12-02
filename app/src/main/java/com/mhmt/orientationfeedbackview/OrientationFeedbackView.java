@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -16,11 +17,8 @@ public class OrientationFeedbackView extends FrameLayout {
 
   protected static final int DEFAULT_LINE_WIDTH = 5;
 
-  protected OrientationFeedbackBall ball;
-
-  public static final int AXIS_X = 0;
-  public static final int AXIS_Y = 1;
-  public static final int AXIS_Z = 2;
+  private static final int YX = 0;
+  private static final int YZ = 1;
 
   public static final int VERTICAL = 0;
   public static final int HORIZONTAL = 1;
@@ -28,12 +26,18 @@ public class OrientationFeedbackView extends FrameLayout {
   protected int axis;
   protected int lineWidth;
 
+  protected OrientationFeedbackBall ball;
+
   protected SensorManager mSensorManager;
   protected Sensor mAccelerometer;
-  protected int ballColor;
+  protected int acceptedBallColor;
+  protected int rejectedallColor;
   protected int backgroundColor;
   protected int lineColor;
-  private int orientation;
+  protected int orientation;
+  protected double threshold;
+  protected DegreeCalculator degreeCalculator;
+  protected  int plane;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -63,6 +67,14 @@ public class OrientationFeedbackView extends FrameLayout {
     setBackgroundColor(backgroundColor);
     drawBall();
     drawLine();
+    switch (plane) {
+      case YZ:
+        degreeCalculator = new YZDegreeCalculator();
+        break;
+      case YX:
+        degreeCalculator = new YXDegreeCalculator();
+        break;
+    }
   }
 
 
@@ -72,13 +84,13 @@ public class OrientationFeedbackView extends FrameLayout {
   }
 
 
-  private void drawBall() {
+  protected void drawBall() {
     ball = orientation == VERTICAL ? new VBall(getContext()) : new HBall(getContext());
-    ball.setColor(ballColor);
+    ball.setColor(acceptedBallColor);
     addView(ball);
   }
 
-  private void drawLine() {
+  protected void drawLine() {
     View line = new View(getContext());
     line.setBackgroundColor(lineColor);
     line.setLayoutParams(orientation == VERTICAL ? new LayoutParams(LayoutParams.MATCH_PARENT,
@@ -96,24 +108,39 @@ public class OrientationFeedbackView extends FrameLayout {
         R.styleable.OrientationFeedbackView,
         0, 0);
     try {
-      axis = a.getInteger(R.styleable.OrientationFeedbackView_gauge_axis, AXIS_Y);
-      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
+//      axis = a.getInteger(R.styleable.OrientationFeedbackView_gauge_axis, AXIS_Y);
+      plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
+//      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
       lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
-      ballColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color, 0x388E3C);
+      acceptedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color, 0x388E3C);
+      rejectedallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color, Color.RED);
       backgroundColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, Color.TRANSPARENT);
       lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
+      threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, 360);
     } finally {
       a.recycle();
     }
   }
 
   public void setBallColor(final int color) {
-    ballColor = color;
     ball.setColor(color);
   }
 
-  public void moveBall(final double value) {
-    ball.move(value);
+  public void gravityChanged(final float[] gravity) {
+    if (ball.getAnimation() == null) {
+      float degrees = (float) degreeCalculator.calculateDegrees(gravity);
+      setBallColor(Math.abs(degrees) > threshold ? rejectedallColor : acceptedBallColor);
+      ball.setTranslationY(degrees * (getHeight() / 180));
+    }
+  }
+
+  public void moveBall(final double radians) {
+//    setBallColor(Math.abs(radians) > threshold ? rejectedallColor : acceptedBallColor);
+    if (ball.getAnimation() == null) {
+      float degrees = (float) Math.toDegrees(radians);
+      Log.d("", String.valueOf(degrees));
+      ball.setTranslationY(degrees * (getHeight() / 180));
+    }
   }
 
   public int getAxis() {

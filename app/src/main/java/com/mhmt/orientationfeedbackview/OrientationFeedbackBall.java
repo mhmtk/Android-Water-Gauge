@@ -51,9 +51,9 @@ public abstract class OrientationFeedbackBall extends View {
 
   public void setColor(final int color) {
     drawPaint.setColor(color);
-//    invalidate();
+    invalidate();
   }
 
-  protected abstract void move(final double value);
+//  protected abstract void move(final double value);
 
 }

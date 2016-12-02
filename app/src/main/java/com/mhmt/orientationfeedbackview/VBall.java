@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.view.Gravity;
-import android.view.View;
 import android.widget.FrameLayout;
 
 public class VBall extends OrientationFeedbackBall {
@@ -37,11 +36,11 @@ public class VBall extends OrientationFeedbackBall {
     canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, drawPaint);
   }
 
-  @Override protected void move(final double value) {
-    if (getAnimation() == null) {
-      setTranslationY((float) (value * ((View) getParent()).getHeight() / 180) );
-    }
-  }
+//  @Override protected void move(final double value) {
+//    if (getAnimation() == null) {
+//      setTranslationY((float) (value * ((View) getParent()).getHeight() / 180) );
+//    }
+//  }
 
 
 }

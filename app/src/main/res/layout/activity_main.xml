@@ -16,19 +16,19 @@
       android:layout_width="50dp"
       android:layout_height="300dp"
       android:layout_alignParentStart="true"
-      app:gauge_orientation="vertical"
-      app:gauge_axis="y"
+      app:gauge_plane="YZ"
+      app:gauge_threshold="10.0"
       app:gauge_ball_accept_color="@android:color/holo_green_dark"
       app:gauge_background_color="@android:color/black"
   />
 
-  <com.mhmt.orientationfeedbackview.OrientationFeedbackView
+  <com.mhmt.orientationfeedbackview.HorizontalOrientationFeedbackView
       android:id="@+id/orientation_view_h"
       android:layout_width="300dp"
       android:layout_height="50dp"
       android:layout_alignParentBottom="true"
-      app:gauge_axis="z"
-      app:gauge_orientation="horizontal"
+      app:gauge_plane="YX"
+      app:gauge_threshold="10.0"
       app:gauge_ball_accept_color="@android:color/holo_green_dark"
       app:gauge_background_color="@android:color/black"
   />
