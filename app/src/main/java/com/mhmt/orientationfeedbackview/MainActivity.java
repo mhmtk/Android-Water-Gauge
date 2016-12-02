@@ -10,7 +10,7 @@ public class MainActivity extends AppCompatActivity {
 
   private SensorManager sensorManager;
   private Sensor sensorAccelerometer;
-  private Sensor sensorMagnetometer;
+//  private Sensor sensorMagnetometer;
 
   private SensorListener sensorListener;
 
@@ -24,18 +24,18 @@ public class MainActivity extends AppCompatActivity {
     sensorListener = new SensorListener(hOrientationFeedbackView, vOrientationFeedbackView);
     sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
     sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-    sensorMagnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+//    sensorMagnetometer = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
   }
 
   @Override protected void onResume() {
     super.onResume();
     sensorManager.registerListener(sensorListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
-    sensorManager.registerListener(sensorListener, sensorMagnetometer, SensorManager.SENSOR_DELAY_UI);
+//    sensorManager.registerListener(sensorListener, sensorMagnetometer, SensorManager.SENSOR_DELAY_UI);
   }
 
   @Override protected void onPause() {
     super.onPause();
     sensorManager.unregisterListener(sensorListener, sensorAccelerometer);
-    sensorManager.unregisterListener(sensorListener, sensorMagnetometer);
+//    sensorManager.unregisterListener(sensorListener, sensorMagnetometer);
   }
 }
