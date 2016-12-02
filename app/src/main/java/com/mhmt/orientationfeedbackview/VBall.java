@@ -36,11 +36,11 @@ public class VBall extends OrientationFeedbackBall {
     canvas.drawCircle(getWidth() / 2, getHeight() / 2, getWidth() / 2, drawPaint);
   }
 
-//  @Override protected void move(final double value) {
+  @Override protected void move(final float value) {
 //    if (getAnimation() == null) {
-//      setTranslationY((float) (value * ((View) getParent()).getHeight() / 180) );
+      setTranslationY(value);
 //    }
-//  }
+  }
 
 
 }

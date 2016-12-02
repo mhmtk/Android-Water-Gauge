@@ -36,10 +36,10 @@ public class HBall extends OrientationFeedbackBall {
     canvas.drawCircle(getWidth() / 2, getHeight() / 2, getHeight() / 2, drawPaint);
   }
 
-//  @Override protected void move(final double value) {
+  @Override protected void move(final float value) {
 //    if (getAnimation() == null) {
-//      setTranslationX((float) (value * ((View) getParent()).getWidth() / 180) );
+      setTranslationX(value);
 //    }
-//  }
+  }
 
 }

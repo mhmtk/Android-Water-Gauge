@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -38,6 +37,7 @@ public class OrientationFeedbackView extends FrameLayout {
   protected double threshold;
   protected DegreeCalculator degreeCalculator;
   protected  int plane;
+  private Normalizer normalizer;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -75,6 +75,7 @@ public class OrientationFeedbackView extends FrameLayout {
         degreeCalculator = new YXDegreeCalculator();
         break;
     }
+    normalizer = orientation == VERTICAL ? new VerticalNormalizer() : new HorizontalNormalizer();
   }
 
 
@@ -110,7 +111,7 @@ public class OrientationFeedbackView extends FrameLayout {
     try {
 //      axis = a.getInteger(R.styleable.OrientationFeedbackView_gauge_axis, AXIS_Y);
       plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
-//      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
+      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
       lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
       acceptedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color, 0x388E3C);
       rejectedallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color, Color.RED);
@@ -130,16 +131,7 @@ public class OrientationFeedbackView extends FrameLayout {
     if (ball.getAnimation() == null) {
       float degrees = (float) degreeCalculator.calculateDegrees(gravity);
       setBallColor(Math.abs(degrees) > threshold ? rejectedallColor : acceptedBallColor);
-      ball.setTranslationY(degrees * (getHeight() / 180));
-    }
-  }
-
-  public void moveBall(final double radians) {
-//    setBallColor(Math.abs(radians) > threshold ? rejectedallColor : acceptedBallColor);
-    if (ball.getAnimation() == null) {
-      float degrees = (float) Math.toDegrees(radians);
-      Log.d("", String.valueOf(degrees));
-      ball.setTranslationY(degrees * (getHeight() / 180));
+      ball.move(normalizer.normalize(this, degrees));
     }
   }
 

@@ -54,6 +54,6 @@ public abstract class OrientationFeedbackBall extends View {
     invalidate();
   }
 
-//  protected abstract void move(final double value);
+  protected abstract void move(final float value);
 
 }
