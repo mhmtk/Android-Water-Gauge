@@ -1,8 +1,10 @@
-package com.mhmt.orientationfeedbackview;
+package com.mhmt.orientationfeedbackview.sensor;
 
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
+
+import com.mhmt.orientationfeedbackview.view.OrientationFeedbackView;
 
 public class SensorListener implements SensorEventListener {
 

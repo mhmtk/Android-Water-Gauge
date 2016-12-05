@@ -1,4 +1,4 @@
-package com.mhmt.orientationfeedbackview;
+package com.mhmt.orientationfeedbackview.view;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -9,9 +9,19 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 
+import com.mhmt.orientationfeedbackview.cache.CacheHelper;
+import com.mhmt.orientationfeedbackview.viewhelper.DegreeCalculator;
+import com.mhmt.orientationfeedbackview.viewhelper.HorizontalNormalizer;
+import com.mhmt.orientationfeedbackview.cache.LimitedCache;
+import com.mhmt.orientationfeedbackview.viewhelper.Normalizer;
+import com.mhmt.orientationfeedbackview.R;
+import com.mhmt.orientationfeedbackview.viewhelper.VerticalNormalizer;
+import com.mhmt.orientationfeedbackview.viewhelper.YXDegreeCalculator;
+import com.mhmt.orientationfeedbackview.viewhelper.YZDegreeCalculator;
+
 public class OrientationFeedbackView extends CardView {
 
-  protected static final int DEFAULT_LINE_WIDTH = 5;
+  protected static final int DEFAULT_LINE_WIDTH = 2;
 
   private static final int YX = 0;
   private static final int YZ = 1;
@@ -22,6 +32,7 @@ public class OrientationFeedbackView extends CardView {
   public static final int DEFAULT_GAUGE_RANGE = 180;
   public static final int DEFAULT_ACCEPTED_BALL_COLOR = 0x388E3C;
   public static final int DEFAULT_REJECTED_BALL_COLOR = Color.RED;
+  private static final int DEFAULT_BACKGROUND_COLOR = 0x33000000;
   private static final int DEFAULT_RADIUS = 15;
 //  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
@@ -41,6 +52,7 @@ public class OrientationFeedbackView extends CardView {
   private int gaugeRange;
   private LimitedCache<Float> transitionCache;
   private float cornerRadius;
+  private int backgroundColor;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -66,10 +78,13 @@ public class OrientationFeedbackView extends CardView {
 
   private void init(final AttributeSet attrs) {
     saveAttr(attrs);
+
     setRadius(cornerRadius);
     if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
       setElevation(0f);
     }
+    setCardBackgroundColor(backgroundColor);
+
     drawBall();
     drawLine();
     switch (plane) {
@@ -108,6 +123,12 @@ public class OrientationFeedbackView extends CardView {
         R.styleable.OrientationFeedbackView,
         0, 0);
     try {
+      if (a.hasValue(R.styleable.CardView_cardCornerRadius)) {
+        throw new IllegalArgumentException("Do not use cardView radius, use gauge_corner_radius instead");
+      }
+//      if (a.hasValue(R.styleable.CardView_cardBackgroundColor)) {
+//        throw new IllegalArgumentException("Do not use cardView background color, use gauge_background_color instead");
+//      }
       plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
       orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
       lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
@@ -119,9 +140,7 @@ public class OrientationFeedbackView extends CardView {
       threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, DEFAULT_THRESHOLD);
       gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, DEFAULT_GAUGE_RANGE);
       cornerRadius = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_corner_radius, DEFAULT_RADIUS);
-      if (a.hasValue(R.styleable.CardView_cardCornerRadius)) {
-        throw new IllegalArgumentException("Do not use cardView radius, use gauge_corner_radius instead");
-      }
+      backgroundColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
     } finally {
       a.recycle();
     }
@@ -131,7 +150,7 @@ public class OrientationFeedbackView extends CardView {
     ball.setColor(color);
   }
 
-  protected void gravityChanged(final float[] gravity) {
+  public void gravityChanged(final float[] gravity) {
     if (ball.getAnimation() == null) {
       transitionCache.add((float) degreeCalculator.calculateDegrees(gravity));
       float smoothedDegree = CacheHelper.getAverage(transitionCache.getCache());
@@ -151,4 +170,5 @@ public class OrientationFeedbackView extends CardView {
   public int getGaugeRange() {
     return gaugeRange;
   }
+
 }

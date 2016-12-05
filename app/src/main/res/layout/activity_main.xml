@@ -12,7 +12,7 @@
     android:paddingBottom="@dimen/activity_vertical_margin"
     tools:context="com.mhmt.orientationfeedbackview.MainActivity">
 
-  <com.mhmt.orientationfeedbackview.OrientationFeedbackView
+  <com.mhmt.orientationfeedbackview.view.OrientationFeedbackView
       android:id="@+id/orientation_view_v"
       android:layout_width="50dp"
       android:layout_height="300dp"
@@ -24,13 +24,14 @@
       app:gauge_ball_accept_color="@android:color/holo_green_dark"
   />
 
-  <com.mhmt.orientationfeedbackview.OrientationFeedbackView
+  <com.mhmt.orientationfeedbackview.view.OrientationFeedbackView
       android:id="@+id/orientation_view_h"
       android:layout_width="300dp"
       android:layout_height="50dp"
       android:layout_alignParentBottom="true"
       app:gauge_line_width="2dp"
       app:gauge_corner_radius="15dp"
+      app:gauge_background_color="#33000000"
       app:gauge_plane="YX"
       app:gauge_range="10"
       app:gauge_orientation="horizontal"

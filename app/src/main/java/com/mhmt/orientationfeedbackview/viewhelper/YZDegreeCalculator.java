@@ -1,4 +1,4 @@
-package com.mhmt.orientationfeedbackview;
+package com.mhmt.orientationfeedbackview.viewhelper;
 
 public class YZDegreeCalculator implements DegreeCalculator{
 

@@ -1,4 +1,6 @@
-package com.mhmt.orientationfeedbackview;
+package com.mhmt.orientationfeedbackview.viewhelper;
+
+import com.mhmt.orientationfeedbackview.view.OrientationFeedbackView;
 
 public class VerticalNormalizer implements Normalizer{
 

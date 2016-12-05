@@ -1,4 +1,4 @@
-package com.mhmt.orientationfeedbackview;
+package com.mhmt.orientationfeedbackview.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;

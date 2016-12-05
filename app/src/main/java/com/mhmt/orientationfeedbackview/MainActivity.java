@@ -5,6 +5,9 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
+import com.mhmt.orientationfeedbackview.sensor.SensorListener;
+import com.mhmt.orientationfeedbackview.view.OrientationFeedbackView;
+
 public class MainActivity extends AppCompatActivity {
 
 
