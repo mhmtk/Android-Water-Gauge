@@ -8,6 +8,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,22 +23,26 @@ public class OrientationFeedbackView extends FrameLayout {
   public static final int VERTICAL = 0;
   public static final int HORIZONTAL = 1;
 
-  protected int axis;
   protected int lineWidth;
 
   protected OrientationFeedbackBall ball;
 
-  protected SensorManager mSensorManager;
-  protected Sensor mAccelerometer;
-  protected int acceptedBallColor;
-  protected int rejectedallColor;
-  protected int backgroundColor;
-  protected int lineColor;
-  protected int orientation;
-  protected double threshold;
-  protected DegreeCalculator degreeCalculator;
-  protected  int plane;
+  private SensorManager mSensorManager;
+  private Sensor mAccelerometer;
+  private int acceptedBallColor;
+  private int rejectedallColor;
+  private int backgroundColor;
+  private int lineColor;
+  private int orientation;
+  private double threshold;
+  private DegreeCalculator degreeCalculator;
+  private int plane;
   private Normalizer normalizer;
+  private boolean acceptable;
+//  private int gaugeMin;
+//  private int gaugeMax;
+  private int gaugeRange;
+  private LimitedCache<Float> transitionCache;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -76,6 +81,7 @@ public class OrientationFeedbackView extends FrameLayout {
         break;
     }
     normalizer = orientation == VERTICAL ? new VerticalNormalizer() : new HorizontalNormalizer();
+    transitionCache = new LimitedCache<>(Float.class, 5, 0f);
   }
 
 
@@ -103,13 +109,12 @@ public class OrientationFeedbackView extends FrameLayout {
     addView(line);
   }
 
-  private void saveAttr(final AttributeSet attrs) {
+  protected void saveAttr(final AttributeSet attrs) {
     TypedArray a = getContext().getTheme().obtainStyledAttributes(
         attrs,
         R.styleable.OrientationFeedbackView,
         0, 0);
     try {
-//      axis = a.getInteger(R.styleable.OrientationFeedbackView_gauge_axis, AXIS_Y);
       plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
       orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
       lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
@@ -118,24 +123,33 @@ public class OrientationFeedbackView extends FrameLayout {
       backgroundColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, Color.TRANSPARENT);
       lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
       threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, 360);
+      gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, 180);
     } finally {
       a.recycle();
     }
   }
 
-  public void setBallColor(final int color) {
+  protected void setBallColor(final int color) {
     ball.setColor(color);
   }
 
-  public void gravityChanged(final float[] gravity) {
+  protected void gravityChanged(final float[] gravity) {
     if (ball.getAnimation() == null) {
       float degrees = (float) degreeCalculator.calculateDegrees(gravity);
-      setBallColor(Math.abs(degrees) > threshold ? rejectedallColor : acceptedBallColor);
-      ball.move(normalizer.normalize(this, degrees));
+      acceptable = Math.abs(degrees) > threshold;
+      setBallColor(acceptable ? rejectedallColor : acceptedBallColor);
+      float move = normalizer.normalize(this, degrees);
+      transitionCache.add(move);
+      ball.move(CacheHelper.getAverage(transitionCache.getCache()));
+      Log.d("ASD", String.valueOf(degrees) + String.valueOf(move));
     }
   }
 
-  public int getAxis() {
-    return axis;
+  public boolean isAcceptable() {
+    return acceptable;
+  }
+
+  public int getGaugeRange() {
+    return gaugeRange;
   }
 }

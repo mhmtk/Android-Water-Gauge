@@ -1,10 +1,14 @@
 package com.mhmt.orientationfeedbackview;
 
-import android.view.View;
-
 public class HorizontalNormalizer implements Normalizer {
 
-  @Override public float normalize(final View view, final double degrees) {
-    return (float) degrees * (view.getWidth() / 180);
+  @Override public float normalize(final OrientationFeedbackView view, final double degrees) {
+    if (degrees >= view.getGaugeRange() / 2) {
+      return view.getWidth() / 2;
+    } else if (-degrees >= view.getGaugeRange() / 2) {
+      return -view.getWidth() / 2;
+    } else {
+      return (float) degrees * view.getWidth() / view.getGaugeRange();
+    }
   }
 }
