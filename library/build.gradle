@@ -1,11 +1,14 @@
-apply plugin: 'com.android.application'
+apply plugin: 'com.android.library'
+apply plugin: 'com.github.dcendents.android-maven'
+
+group='com.github.mhmtk'
 
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.1"
 
     defaultConfig {
-        applicationId "com.mhmt.orientationfeedbackview"
+//        applicationId "com.mhmt.orientationfeedbackview"
         minSdkVersion 17
         targetSdkVersion 25
         versionCode 1
