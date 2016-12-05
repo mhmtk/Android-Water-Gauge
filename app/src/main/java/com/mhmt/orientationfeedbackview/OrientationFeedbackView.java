@@ -8,7 +8,6 @@ import android.hardware.Sensor;
 import android.hardware.SensorManager;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -22,6 +21,11 @@ public class OrientationFeedbackView extends FrameLayout {
 
   public static final int VERTICAL = 0;
   public static final int HORIZONTAL = 1;
+  public static final int DEFAULT_THRESHOLD = 360;
+  public static final int DEFAULT_GAUGE_RANGE = 180;
+  public static final int DEFAULT_ACCEPTED_BALL_COLOR = 0x388E3C;
+  public static final int DEFAULT_REJECTED_BALL_COLOR = Color.RED;
+  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
   protected int lineWidth;
 
@@ -39,7 +43,7 @@ public class OrientationFeedbackView extends FrameLayout {
   private int plane;
   private Normalizer normalizer;
   private boolean acceptable;
-//  private int gaugeMin;
+  //  private int gaugeMin;
 //  private int gaugeMax;
   private int gaugeRange;
   private LimitedCache<Float> transitionCache;
@@ -118,12 +122,15 @@ public class OrientationFeedbackView extends FrameLayout {
       plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
       orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
       lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
-      acceptedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color, 0x388E3C);
-      rejectedallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color, Color.RED);
-      backgroundColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, Color.TRANSPARENT);
+      acceptedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color,
+                                     DEFAULT_ACCEPTED_BALL_COLOR);
+      rejectedallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color,
+                                    DEFAULT_REJECTED_BALL_COLOR);
+      backgroundColor =
+          a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
       lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
-      threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, 360);
-      gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, 180);
+      threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, DEFAULT_THRESHOLD);
+      gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, DEFAULT_GAUGE_RANGE);
     } finally {
       a.recycle();
     }
@@ -135,13 +142,14 @@ public class OrientationFeedbackView extends FrameLayout {
 
   protected void gravityChanged(final float[] gravity) {
     if (ball.getAnimation() == null) {
-      float degrees = (float) degreeCalculator.calculateDegrees(gravity);
-      acceptable = Math.abs(degrees) > threshold;
+      transitionCache.add((float) degreeCalculator.calculateDegrees(gravity));
+      float smoothedDegree = CacheHelper.getAverage(transitionCache.getCache());
+
+      acceptable = Math.abs(smoothedDegree) > threshold;
       setBallColor(acceptable ? rejectedallColor : acceptedBallColor);
-      float move = normalizer.normalize(this, degrees);
-      transitionCache.add(move);
-      ball.move(CacheHelper.getAverage(transitionCache.getCache()));
-      Log.d("ASD", String.valueOf(degrees) + String.valueOf(move));
+
+      final float move = normalizer.normalize(this, smoothedDegree);
+      ball.move(move);
     }
   }
 
