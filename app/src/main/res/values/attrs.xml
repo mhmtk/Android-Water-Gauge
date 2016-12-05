@@ -18,5 +18,6 @@
     <attr name="gauge_min" format="integer"/>
     <attr name="gauge_max" format="integer"/>
     <attr name="gauge_range" format="integer"/>
+    <attr name="gauge_corner_radius" format="dimension"/>
   </declare-styleable>
 </resources>

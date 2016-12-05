@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
   @Override protected void onResume() {
     super.onResume();
-    sensorManager.registerListener(sensorListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
+    sensorManager.registerListener(sensorListener, sensorAccelerometer, SensorManager.SENSOR_DELAY_UI);
 //    sensorManager.registerListener(sensorListener, sensorMagnetometer, SensorManager.SENSOR_DELAY_UI);
   }
 

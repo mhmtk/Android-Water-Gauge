@@ -1,18 +1,15 @@
 package com.mhmt.orientationfeedbackview;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
-import android.hardware.Sensor;
-import android.hardware.SensorManager;
 import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.FrameLayout;
 
-public class OrientationFeedbackView extends FrameLayout {
+public class OrientationFeedbackView extends CardView {
 
   protected static final int DEFAULT_LINE_WIDTH = 5;
 
@@ -25,17 +22,15 @@ public class OrientationFeedbackView extends FrameLayout {
   public static final int DEFAULT_GAUGE_RANGE = 180;
   public static final int DEFAULT_ACCEPTED_BALL_COLOR = 0x388E3C;
   public static final int DEFAULT_REJECTED_BALL_COLOR = Color.RED;
-  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
+  private static final int DEFAULT_RADIUS = 15;
+//  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
   protected int lineWidth;
 
   protected OrientationFeedbackBall ball;
 
-  private SensorManager mSensorManager;
-  private Sensor mAccelerometer;
   private int acceptedBallColor;
   private int rejectedallColor;
-  private int backgroundColor;
   private int lineColor;
   private int orientation;
   private double threshold;
@@ -43,10 +38,9 @@ public class OrientationFeedbackView extends FrameLayout {
   private int plane;
   private Normalizer normalizer;
   private boolean acceptable;
-  //  private int gaugeMin;
-//  private int gaugeMax;
   private int gaugeRange;
   private LimitedCache<Float> transitionCache;
+  private float cornerRadius;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -63,17 +57,19 @@ public class OrientationFeedbackView extends FrameLayout {
     init(attrs);
   }
 
-  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-  public OrientationFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                                 final int defStyleRes) {
-    super(context, attrs, defStyleAttr, defStyleRes);
-    init(attrs);
-  }
+//  @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+//  public OrientationFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr,
+//                                 final int defStyleRes) {
+//    super(context, attrs, defStyleAttr, defStyleRes);
+//    init(attrs);
+//  }
 
   private void init(final AttributeSet attrs) {
-    setupSensors();
     saveAttr(attrs);
-    setBackgroundColor(backgroundColor);
+    setRadius(cornerRadius);
+    if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+      setElevation(0f);
+    }
     drawBall();
     drawLine();
     switch (plane) {
@@ -87,13 +83,6 @@ public class OrientationFeedbackView extends FrameLayout {
     normalizer = orientation == VERTICAL ? new VerticalNormalizer() : new HorizontalNormalizer();
     transitionCache = new LimitedCache<>(Float.class, 5, 0f);
   }
-
-
-  private void setupSensors() {
-    mSensorManager = (SensorManager) getContext().getSystemService(Context.SENSOR_SERVICE);
-    mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-  }
-
 
   protected void drawBall() {
     ball = orientation == VERTICAL ? new VBall(getContext()) : new HBall(getContext());
@@ -126,11 +115,10 @@ public class OrientationFeedbackView extends FrameLayout {
                                      DEFAULT_ACCEPTED_BALL_COLOR);
       rejectedallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color,
                                     DEFAULT_REJECTED_BALL_COLOR);
-      backgroundColor =
-          a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
       lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
       threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, DEFAULT_THRESHOLD);
       gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, DEFAULT_GAUGE_RANGE);
+      cornerRadius = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_corner_radius, DEFAULT_RADIUS);
     } finally {
       a.recycle();
     }
