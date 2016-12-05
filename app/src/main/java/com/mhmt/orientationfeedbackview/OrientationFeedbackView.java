@@ -119,6 +119,9 @@ public class OrientationFeedbackView extends CardView {
       threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, DEFAULT_THRESHOLD);
       gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, DEFAULT_GAUGE_RANGE);
       cornerRadius = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_corner_radius, DEFAULT_RADIUS);
+      if (a.hasValue(R.styleable.CardView_cardCornerRadius)) {
+        throw new IllegalArgumentException("Do not use cardView radius, use gauge_corner_radius instead");
+      }
     } finally {
       a.recycle();
     }
