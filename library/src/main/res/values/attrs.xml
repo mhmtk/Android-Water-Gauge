@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="OrientationFeedbackView">
+    <attr name="gauge_plane" format="enum">
+      <enum name="YX" value="0"/>
+      <enum name="YZ" value="1"/>
+    </attr>
+    <attr name="gauge_line_width" format="dimension"/>
+    <attr name="gauge_ball_accept_color" format="color"/>
+    <attr name="gauge_ball_reject_color" format="color"/>
+    <attr name="gauge_background_color" format="color"/>
+    <attr name="gauge_line_color" format="color"/>
+    <attr name="gauge_threshold" format="float"/>
+    <attr name="gauge_orientation" format="enum">
+      <enum name="vertical" value="0"/>
+      <enum name="horizontal" value="1"/>
+    </attr>
+    <attr name="gauge_min" format="integer"/>
+    <attr name="gauge_max" format="integer"/>
+    <attr name="gauge_range" format="integer"/>
+    <attr name="gauge_corner_radius" format="dimension"/>
+  </declare-styleable>
+</resources>
