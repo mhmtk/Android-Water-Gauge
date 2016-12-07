@@ -10,7 +10,6 @@ import com.mhmt.library.view.OrientationFeedbackView;
 
 public class MainActivity extends AppCompatActivity {
 
-
   private SensorManager sensorManager;
   private Sensor sensorAccelerometer;
 

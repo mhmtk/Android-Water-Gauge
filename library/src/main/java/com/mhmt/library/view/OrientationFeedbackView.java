@@ -26,14 +26,16 @@ public class OrientationFeedbackView extends CardView {
   private static final int YX = 0;
   private static final int YZ = 1;
 
-  public static final int VERTICAL = 0;
-  public static final int HORIZONTAL = 1;
-  public static final int DEFAULT_THRESHOLD = 360;
-  public static final int DEFAULT_GAUGE_RANGE = 180;
-  public static final int DEFAULT_ACCEPTED_BALL_COLOR = 0x388E3C;
-  public static final int DEFAULT_REJECTED_BALL_COLOR = Color.RED;
+  private static final int VERTICAL = 0;
+  private static final int HORIZONTAL = 1;
+  private static final int DEFAULT_THRESHOLD = 360;
+  private static final int DEFAULT_GAUGE_RANGE = 180;
+  private static final int DEFAULT_ACCEPTED_BALL_COLOR = 0x388E3C;
+  private static final int DEFAULT_REJECTED_BALL_COLOR = Color.RED;
   private static final int DEFAULT_BACKGROUND_COLOR = 0x33000000;
   private static final int DEFAULT_RADIUS = 15;
+
+  private static final int DEFAULT_CACHE_SIZE = 20;
 //  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
   protected int lineWidth;
@@ -96,7 +98,7 @@ public class OrientationFeedbackView extends CardView {
         break;
     }
     normalizer = orientation == VERTICAL ? new VerticalNormalizer() : new HorizontalNormalizer();
-    transitionCache = new LimitedCache<>(Float.class, 5, 0f);
+    transitionCache = new LimitedCache<>(Float.class, DEFAULT_CACHE_SIZE, 0f);
   }
 
   protected void drawBall() {
