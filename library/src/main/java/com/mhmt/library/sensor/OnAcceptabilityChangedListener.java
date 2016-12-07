@@ -1,7 +1,9 @@
 package com.mhmt.library.sensor;
 
-//NOT IMPLEMENTED
-interface OnAcceptabilityChangedListener {
+import com.mhmt.library.view.OrientationFeedbackView;
 
-  void acceptibilityChanged(final boolean acceptable);
+//NOT IMPLEMENTED
+public interface OnAcceptabilityChangedListener {
+
+  void acceptabilityChanged(final OrientationFeedbackView view, final boolean acceptable);
 }

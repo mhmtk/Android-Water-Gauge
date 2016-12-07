@@ -1,6 +1,4 @@
-package com.mhmt.library.viewhelper;
-
-import com.mhmt.library.view.OrientationFeedbackView;
+package com.mhmt.library.view;
 
 public interface Normalizer {
 

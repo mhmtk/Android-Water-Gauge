@@ -1,8 +1,6 @@
-package com.mhmt.library.viewhelper;
+package com.mhmt.library.view;
 
-import com.mhmt.library.view.OrientationFeedbackView;
-
-public class VerticalNormalizer implements Normalizer{
+public class VerticalNormalizer implements Normalizer {
 
   @Override public float normalize(final OrientationFeedbackView view, final double degrees) {
     if (degrees >= view.getGaugeRange() / 2) {
