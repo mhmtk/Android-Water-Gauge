@@ -195,12 +195,12 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
       transitionCache.add((float) degreeCalculator.calculateDegrees(gravity));
       float smoothedDegree = CacheHelper.getAverage(transitionCache.getCache());
 
-      newAcceptable = Math.abs(smoothedDegree) > threshold;
+      newAcceptable = Math.abs(smoothedDegree) <= threshold;
       if (newAcceptable != acceptable) {
         if (onAcceptabilityChangedListener != null) {
           onAcceptabilityChangedListener.acceptabilityChanged(this, newAcceptable);
         }
-        setBallColor(newAcceptable ? rejectedBallColor : acceptedBallColor);
+        setBallColor(newAcceptable ? acceptedBallColor: rejectedBallColor);
       }
       acceptable = newAcceptable;
       final float move = normalizer.normalize(this, smoothedDegree);
