@@ -22,6 +22,8 @@
       app:gauge_range="60"
       app:gauge_threshold="20.0"
       app:gauge_ball_accept_color="@android:color/holo_green_dark"
+      app:gauge_show_degrees="true"
+      app:gauge_degree_display_text_color="@android:color/holo_red_light"
   />
 
   <com.mhmt.library.view.OrientationFeedbackView

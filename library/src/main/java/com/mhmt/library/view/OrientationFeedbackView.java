@@ -12,6 +12,8 @@ import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
+import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.mhmt.library.R;
 import com.mhmt.library.cache.CacheHelper;
@@ -21,7 +23,11 @@ import com.mhmt.library.viewhelper.DegreeCalculator;
 import com.mhmt.library.viewhelper.YXDegreeCalculator;
 import com.mhmt.library.viewhelper.YZDegreeCalculator;
 
+import java.text.DecimalFormat;
+
 public class OrientationFeedbackView extends CardView implements SensorEventListener {
+
+  private static DecimalFormat df2 = new DecimalFormat(".#");
 
   protected static final int DEFAULT_LINE_WIDTH = 2;
 
@@ -37,7 +43,7 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
   private static final int DEFAULT_BACKGROUND_COLOR = 0x33000000;
   private static final int DEFAULT_RADIUS = 15;
 
-  private static final int DEFAULT_CACHE_SIZE = 20;
+  private static final int DEFAULT_CACHE_SIZE = 15;
 //  public static final int DEFAULT_BACKGROUND_COLOR = Color.TRANSPARENT;
 
   protected int lineWidth;
@@ -63,6 +69,9 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
   private boolean newAcceptable;
   private SensorManager sensorManager;
   private Sensor sensorAccelerometer;
+  private boolean showDegrees;
+
+  private TextView degreeDisplay;
 
   public OrientationFeedbackView(final Context context) {
     super(context);
@@ -97,6 +106,9 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
 
     drawBall();
     drawLine();
+    if (showDegrees) {
+      addDegreeDisplay();
+    }
     switch (plane) {
       case YZ:
         degreeCalculator = new YZDegreeCalculator();
@@ -110,6 +122,14 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
 
     sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
     sensorAccelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+  }
+
+  private void addDegreeDisplay() {
+    degreeDisplay = new TextView(getContext());
+    degreeDisplay.setTextColor(Color.RED);
+    degreeDisplay.setLayoutParams(new LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT,
+                                                   FrameLayout.LayoutParams.WRAP_CONTENT, Gravity.CENTER));
+    addView(degreeDisplay);
   }
 
   protected void drawBall() {
@@ -158,6 +178,7 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
       cornerRadius = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_corner_radius, DEFAULT_RADIUS);
       backgroundColor =
           a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
+      showDegrees = a.getBoolean(R.styleable.OrientationFeedbackView_gauge_show_degrees, false);
     } finally {
       a.recycle();
     }
@@ -194,6 +215,10 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
     if (ball.getAnimation() == null) {
       transitionCache.add((float) degreeCalculator.calculateDegrees(gravity));
       float smoothedDegree = CacheHelper.getAverage(transitionCache.getCache());
+
+      if (showDegrees) {
+        degreeDisplay.setText(String.valueOf(df2.format(smoothedDegree)));
+      }
 
       newAcceptable = Math.abs(smoothedDegree) <= threshold;
       if (newAcceptable != acceptable) {

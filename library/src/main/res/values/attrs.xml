@@ -19,5 +19,7 @@
     <attr name="gauge_max" format="integer"/>
     <attr name="gauge_range" format="integer"/>
     <attr name="gauge_corner_radius" format="dimension"/>
+    <attr name="gauge_show_degrees" format="boolean"/>
+    <attr name="gauge_degree_display_text_color" format="color"/>
   </declare-styleable>
 </resources>
