@@ -19,4 +19,4 @@ allprojects {
 	}
 }
 ```
-For adding it using other wayscheck out https://jitpack.io/#mhmtk/androidwatergauge/0.6.0
+For adding it using other ways, check out https://jitpack.io/#mhmtk/androidwatergauge/0.6.0
