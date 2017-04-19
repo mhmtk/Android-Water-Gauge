@@ -37,9 +37,9 @@
       app:gauge_corner_radius="15dp"
       app:gauge_background_color="#33000000"
       app:gauge_plane="YX"
-      app:gauge_range="10"
+      app:gauge_range="30"
       app:gauge_orientation="horizontal"
-      app:gauge_threshold="4.0"
+      app:gauge_threshold="5.0"
       app:gauge_ball_accept_color="@android:color/holo_green_dark"
   />
 
