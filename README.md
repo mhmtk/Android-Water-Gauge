@@ -50,7 +50,7 @@ It's highy customizable, give it a go with the following attributes
 Adding to your App
 ===
 This library is available through jitpack central.
-Just add the following to your app-l=evel gradle file:
+Just add the following to your app-level gradle file:
 ```groovy
 dependencies {
         compile 'com.github.mhmtk:androidwatergauge:0.6.0'
