@@ -1,6 +1,8 @@
 # Android Water Gauge
 A customizable water gauge to display devices orientation
 
+[![](https://jitpack.io/v/mhmtk/androidwatergauge.svg)](https://jitpack.io/#mhmtk/androidwatergauge)
+
 ![alt text](https://github.com/mhmtk/Android-Water-Gauge/blob/master/demo/water_gauge.gif "Demo")
 
 Using the Android Water Gauge
