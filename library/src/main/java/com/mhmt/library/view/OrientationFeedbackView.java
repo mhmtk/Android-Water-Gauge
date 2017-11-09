@@ -153,7 +153,7 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
   protected void saveAttr(final AttributeSet attrs) {
     TypedArray a = getContext().getTheme().obtainStyledAttributes(
         attrs,
-        R.styleable.OrientationFeedbackView,
+        R.styleable.CardView,
         0, 0);
     try {
       if (a.hasValue(R.styleable.CardView_cardCornerRadius)) {
@@ -162,23 +162,23 @@ public class OrientationFeedbackView extends CardView implements SensorEventList
 //      if (a.hasValue(R.styleable.CardView_cardBackgroundColor)) {
 //        throw new IllegalArgumentException("Do not use cardView background color, use gauge_background_color instead");
 //      }
-      plane = a.getInt(R.styleable.OrientationFeedbackView_gauge_plane, YZ);
-      orientation = a.getInteger(R.styleable.OrientationFeedbackView_gauge_orientation, VERTICAL);
-      lineWidth = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_line_width, DEFAULT_LINE_WIDTH);
-      acceptedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_accept_color,
+      plane = a.getInt(R.styleable.CardView_gauge_plane, YZ);
+      orientation = a.getInteger(R.styleable.CardView_gauge_orientation, VERTICAL);
+      lineWidth = a.getDimensionPixelSize(R.styleable.CardView_gauge_line_width, DEFAULT_LINE_WIDTH);
+      acceptedBallColor = a.getColor(R.styleable.CardView_gauge_ball_accept_color,
                                      DEFAULT_ACCEPTED_BALL_COLOR);
-      rejectedBallColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_ball_reject_color,
+      rejectedBallColor = a.getColor(R.styleable.CardView_gauge_ball_reject_color,
                                      DEFAULT_REJECTED_BALL_COLOR);
-      lineColor = a.getColor(R.styleable.OrientationFeedbackView_gauge_line_color, Color.WHITE);
-      threshold = a.getFloat(R.styleable.OrientationFeedbackView_gauge_threshold, DEFAULT_THRESHOLD);
+      lineColor = a.getColor(R.styleable.CardView_gauge_line_color, Color.WHITE);
+      threshold = a.getFloat(R.styleable.CardView_gauge_threshold, DEFAULT_THRESHOLD);
       if (threshold > DEFAULT_THRESHOLD) {
         throw new IllegalArgumentException("Threshold cannot be more than 180 degres");
       }
-      gaugeRange = a.getInt(R.styleable.OrientationFeedbackView_gauge_range, DEFAULT_GAUGE_RANGE);
-      cornerRadius = a.getDimensionPixelSize(R.styleable.OrientationFeedbackView_gauge_corner_radius, DEFAULT_RADIUS);
+      gaugeRange = a.getInt(R.styleable.CardView_gauge_range, DEFAULT_GAUGE_RANGE);
+      cornerRadius = a.getDimensionPixelSize(R.styleable.CardView_gauge_corner_radius, DEFAULT_RADIUS);
       backgroundColor =
-          a.getColor(R.styleable.OrientationFeedbackView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
-      showDegrees = a.getBoolean(R.styleable.OrientationFeedbackView_gauge_show_degrees, false);
+          a.getColor(R.styleable.CardView_gauge_background_color, DEFAULT_BACKGROUND_COLOR);
+      showDegrees = a.getBoolean(R.styleable.CardView_gauge_show_degrees, false);
     } finally {
       a.recycle();
     }
