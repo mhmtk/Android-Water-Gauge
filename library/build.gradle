@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+group='com.github.mhmtk'
+
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.2"
